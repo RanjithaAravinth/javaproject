@@ -25,8 +25,14 @@ steps:
   - script: mvn clean install -DskipTests=true
     displayName: 'Maven Clean and Install (skip tests for faster build)'
 
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Pipeline.Workspace)'
+      artifact: 'artifact'
+      publishLocation: 'pipeline'
+
   # Step 3: Prepare SonarCloud Analysis
-  - task: SonarCloudPrepare@1
+  - task: SonarCloudPrepare@3
     inputs:
       SonarCloud: 'sonarcloud'
       organization: $(SONAR_ORG)  # Use SonarCloud service connection configured in Azure DevOps
