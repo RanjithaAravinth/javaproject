@@ -9,8 +9,8 @@ pool:
 
 variables:
   # Define SonarCloud variables (adjust these values)
-  SONAR_PROJECT_KEY: 'YourSonarProjectKey'  # Replace with your SonarCloud project key
-  SONAR_ORG: 'YourOrganizationKey'  # Replace with your SonarCloud organization key
+  SONAR_PROJECT_KEY: 'javatest01'  # Replace with your SonarCloud project key
+  SONAR_ORG: 'javatest'  # Replace with your SonarCloud organization key
   SONAR_TOKEN: $(SonarCloudToken)  # SonarCloud token stored as pipeline secret
   
 steps:
