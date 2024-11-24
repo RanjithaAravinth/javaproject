@@ -1,0 +1,41 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  MAVEN_OPTS: '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+
+steps:
+  - task: UseJava@1
+    inputs:
+      version: '11'
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      options: '-B -DskipTests'
+      publishJUnitResults: false
+      goals: 'clean install'
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      options: '-B'
+      goals: 'verify'
+      codeCoverageTool: 'JaCoCo'
+
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'YourSonarCloudServiceConnection'
+      organization: 'your-sonarcloud-org'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'your-project-key'
+      cliProjectName: 'Simple Multi-Module Project'
+      cliSources: '.'
+
+  - task: SonarCloudAnalyze@1
+
+  - task: SonarCloudPublish@1
