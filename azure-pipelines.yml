@@ -18,7 +18,7 @@ steps:
   - task: JavaToolInstaller@0
     inputs:
         versionSpec: '11'
-        jdkArchitecture: 'x64'
+        jdkArchitectureOption: 'x64'
 
   # Step 2: Install dependencies using Maven
   - script: mvn clean install -DskipTests=true
