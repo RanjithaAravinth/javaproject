@@ -1,0 +1,47 @@
+
+trigger:
+  branches:
+    include:
+      - main  # Trigger on main branch (adjust as necessary)
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use the latest Ubuntu VM for running the pipeline
+
+variables:
+  # Define SonarCloud variables (adjust these values)
+  SONAR_PROJECT_KEY: 'YourSonarProjectKey'  # Replace with your SonarCloud project key
+  SONAR_ORG: 'YourOrganizationKey'  # Replace with your SonarCloud organization key
+  SONAR_TOKEN: $(SonarCloudToken)  # SonarCloud token stored as pipeline secret
+  
+steps:
+  # Step 1: Set up Java environment
+  - task: UseJava@1
+    inputs:
+      versionSpec: '11'  # Use Java 11 for the build
+      jdkArchitecture: 'x64'
+
+  # Step 2: Install dependencies using Maven
+  - script: mvn clean install -DskipTests=true
+    displayName: 'Maven Clean and Install (skip tests for faster build)'
+
+  # Step 3: Prepare SonarCloud Analysis
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'SonarCloud'  # Use SonarCloud service connection configured in Azure DevOps
+      organization: $(SONAR_ORG)  # Your SonarCloud organization key
+      projectKey: $(SONAR_PROJECT_KEY)  # Your SonarCloud project key
+      projectName: 'multi-module-project'  # Your project name (can be adjusted)
+      extraProperties: |
+        sonar.sources=module-without-tests/src/main/java,module-with-tests/src/main/java  # Define source folders
+        sonar.tests=module-with-tests/src/test/java  # Define test folders
+        sonar.java.binaries=module-without-tests/target,module-with-tests/target  # Define binary folders for analysis
+        sonar.junit.reportPaths=module-with-tests/target/test-classes  # Path to JUnit test results (can be adjusted)
+        sonar.jacoco.reportPaths=module-with-tests/target/site/jacoco/jacoco.xml  # Path to JaCoCo coverage report
+
+  # Step 4: Run SonarCloud Analysis
+  - script: mvn sonar:sonar -Dsonar.login=$(SONAR_TOKEN)
+    displayName: 'Run SonarCloud Analysis'
+
+  # Step 5: Post-analysis step (optional, e.g., if you want to add notifications, etc.)
+  - script: echo "SonarCloud Analysis Completed!"
+    displayName: 'SonarCloud Analysis Finished'
