@@ -30,6 +30,13 @@ steps:
       options: '-B'
       goals: 'verify'
       codeCoverageTool: 'JaCoCo'
+      
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Pipeline.Workspace)'
+      artifact: 'artifact'
+      publishLocation: 'pipeline'
+
 
   - task: SonarCloudPrepare@3
     inputs:
