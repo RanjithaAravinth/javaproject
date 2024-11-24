@@ -28,10 +28,12 @@ steps:
   # Step 3: Prepare SonarCloud Analysis
   - task: SonarCloudPrepare@1
     inputs:
-      SonarCloud: 'SonarCloud'  # Use SonarCloud service connection configured in Azure DevOps
-      organization: $(SONAR_ORG)  # Your SonarCloud organization key
-      projectKey: $(SONAR_PROJECT_KEY)  # Your SonarCloud project key
-      projectName: 'multi-module-project'  # Your project name (can be adjusted)
+      SonarCloud: 'sonarcloud'  # Use SonarCloud service connection configured in Azure DevOps
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: $(SONAR_PROJECT_KEY)
+      cliProjectName: 'javaproject'
+      cliSources: '.'
       extraProperties: |
         sonar.sources=module-without-tests/src/main/java,module-with-tests/src/main/java  # Define source folders
         sonar.tests=module-with-tests/src/test/java  # Define test folders
