@@ -15,10 +15,10 @@ variables:
   
 steps:
   # Step 1: Set up Java environment
-  - task: UseJava@1
+  - task: JavaToolInstaller@0
     inputs:
-      versionSpec: '11'  # Use Java 11 for the build
-      jdkArchitecture: 'x64'
+        versionSpec: '11'
+        jdkArchitecture: 'x64'
 
   # Step 2: Install dependencies using Maven
   - script: mvn clean install -DskipTests=true
