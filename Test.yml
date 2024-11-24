@@ -6,11 +6,16 @@ pool:
 
 variables:
   MAVEN_OPTS: '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+  SONAR_PROJECT_KEY: 'javatest01'  # Replace with your SonarCloud project key
+  SONAR_ORG: 'javatest'  # Replace with your SonarCloud organization key
+  SONAR_TOKEN: $(SonarCloudToken)  # SonarCloud token stored as pipeline secret
 
 steps:
-  - task: UseJava@1
+  - task: JavaToolInstaller@0
     inputs:
-      version: '11'
+        versionSpec: '11'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
 
   - task: Maven@3
     inputs:
@@ -26,16 +31,16 @@ steps:
       goals: 'verify'
       codeCoverageTool: 'JaCoCo'
 
-  - task: SonarCloudPrepare@1
+  - task: SonarCloudPrepare@3
     inputs:
-      SonarCloud: 'YourSonarCloudServiceConnection'
-      organization: 'your-sonarcloud-org'
+      SonarCloud: 'sonarcloud'
+      organization: $(SONAR_ORG)  # Use SonarCloud service connection configured in Azure DevOps
       scannerMode: 'CLI'
       configMode: 'manual'
-      cliProjectKey: 'your-project-key'
-      cliProjectName: 'Simple Multi-Module Project'
+      cliProjectKey: $(SONAR_PROJECT_KEY)
+      cliProjectName: 'javaproject'
       cliSources: '.'
 
-  - task: SonarCloudAnalyze@1
+  - task: SonarCloudAnalyze@3
 
-  - task: SonarCloudPublish@1
+  - task: SonarCloudPublish@3
