@@ -34,7 +34,7 @@ steps:
       extraProperties: |
         sonar.sources=module-without-tests/src/main/java,module-with-tests/src/main/java  # Define source folders
         sonar.tests=module-with-tests/src/test/java  # Define test folders
-        sonar.java.binaries=module-without-tests/target,module-with-tests/target  # Define binary folders for analysis
+        sonar.java.binaries=module-without-tests/target/module-with-tests/target  # Define binary folders for analysis
         sonar.junit.reportPaths=module-with-tests/target/test-classes  # Path to JUnit test results (can be adjusted)
         sonar.jacoco.reportPaths=module-with-tests/target/site/jacoco/jacoco.xml  # Path to JaCoCo coverage report
 
