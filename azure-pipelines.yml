@@ -19,6 +19,7 @@ steps:
     inputs:
         versionSpec: '11'
         jdkArchitectureOption: 'x64'
+        jdkSourceOption: true
 
   # Step 2: Install dependencies using Maven
   - script: mvn clean install -DskipTests=true
